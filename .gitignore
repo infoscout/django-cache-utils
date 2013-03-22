@@ -33,3 +33,9 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+*.prefs
+
+.settings/org.eclipse.core.resources.prefs
+
+.settings/org.eclipse.core.resources.prefs

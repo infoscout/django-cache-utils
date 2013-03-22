@@ -16,7 +16,7 @@ setup(
     license = 'MIT license',
     description = """ Caching decorator and django cache backend with advanced invalidation ability and dog-pile effect prevention """,
 
-    long_description = open('README.rst').read(),
+    long_description = open('README.md').read(),
     requires = ['django', 'memcached'],
 
     classifiers=(
