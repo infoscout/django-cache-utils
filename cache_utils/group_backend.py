@@ -35,7 +35,7 @@ class CacheClass(MemcachedCacheClass):
 
         return super(CacheClass, self).add(key, packed_value, real_timeout)
 
-    def get(self, key, default=None, group=None):
+    def get(self, key, version=None, default=None, group=None):
         key = self._make_key(group, key)
         packed_value = super(CacheClass, self).get(key, default)
         if packed_value is None:
