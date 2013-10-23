@@ -32,11 +32,7 @@ def cached(timeout, group=None):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-
-            # full name is stored as attribute on first call
-            if not hasattr(wrapper, '_full_name'):
-                name, _args = _func_info(func, args)
-                wrapper._full_name = name
+            full_name(*args)
 
             # try to get the value from cache
             key = get_key(wrapper._full_name, func_type, args, kwargs)
@@ -60,10 +56,17 @@ def cached(timeout, group=None):
             '''
             forces a call to the function & sets the new value in the cache
             '''
+            full_name(*args)
             key = get_key(wrapper._full_name, func_type, args, kwargs)
             value = func(*args, **kwargs)
             cache.set(key, value, timeout, **backend_kwargs)
             return value
+
+        def full_name(*args):
+            # full name is stored as attribute on first call
+            if not hasattr(wrapper, '_full_name'):
+                name, _args = _func_info(func, args)
+                wrapper._full_name = name
 
         wrapper.invalidate = invalidate
         wrapper.force_recalc = force_recalc
