@@ -41,11 +41,12 @@ def cached(timeout, group=None):
             # try to get the value from cache
             key = get_key(wrapper._full_name, func_type, args, kwargs)
             value = cache.get(key, **backend_kwargs)
-
+            
             # in case of cache miss recalculate the value and put it to the cache
             if value is None:
                 value = func(*args, **kwargs)
                 cache.set(key, value, timeout, **backend_kwargs)
+                
             return value
 
         def invalidate(*args, **kwargs):
@@ -54,7 +55,18 @@ def cached(timeout, group=None):
                 return
             key = get_key(wrapper._full_name, 'function', args, kwargs)
             cache.delete(key, **backend_kwargs)
+        
+        def force_recalc(*args, **kwargs):
+            '''
+            forces a call to the function & sets the new value in the cache
+            '''
+            key = get_key(wrapper._full_name, func_type, args, kwargs)
+            value = func(*args, **kwargs)
+            cache.set(key, value, timeout, **backend_kwargs)
+            return value
 
         wrapper.invalidate = invalidate
+        wrapper.force_recalc = force_recalc
+        
         return wrapper
     return _cached
