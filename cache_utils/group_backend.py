@@ -26,9 +26,13 @@ MINT_DELAY = 30
 
 class CacheClass(MemcachedCacheClass):
 
+    def _get_real_timeout(self, timeout):
+        return timeout or self.default_timeout
+    
     def add(self, key, value, timeout=0, group=None):
         key = self._make_key(group, key)
 
+        timeout = self._get_real_timeout(timeout)
         refresh_time = timeout + time.time()
         real_timeout = timeout + MINT_DELAY
         packed_value = (value, refresh_time, False)
@@ -50,6 +54,7 @@ class CacheClass(MemcachedCacheClass):
 
     def set(self, key, value, timeout=0, group=None, refreshed=False):
         key = self._make_key(group, key)
+        timeout = self._get_real_timeout(timeout)
         refresh_time = timeout + time.time()
         real_timeout = timeout + MINT_DELAY
         packed_value = (value, refresh_time, refreshed)
