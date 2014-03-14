@@ -1,9 +1,9 @@
 #coding: utf-8
-from django.core.cache import cache
+from django.core.cache import get_cache
 from django.utils.functional import wraps
 from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
 
-def cached(timeout, group=None):
+def cached(timeout, group=None, backend=None):
     """ Caching decorator. Can be applied to function, method or classmethod.
     Supports bulk cache invalidation and invalidation for exact parameter
     set. Cache keys are human-readable because they are constructed from
@@ -26,6 +26,11 @@ def cached(timeout, group=None):
         def get_key(*args, **kwargs):
             return sanitize_memcached_key(_cache_key(*args, **kwargs))
 
+    if backend:
+        cache_backend = get_cache(backend)
+    else:
+        cache_backend = get_cache('default')
+
     def _cached(func):
 
         func_type = _func_type(func)
@@ -36,12 +41,12 @@ def cached(timeout, group=None):
 
             # try to get the value from cache
             key = get_key(wrapper._full_name, func_type, args, kwargs)
-            value = cache.get(key, **backend_kwargs)
+            value = cache_backend.get(key, **backend_kwargs)
             
             # in case of cache miss recalculate the value and put it to the cache
             if value is None:
                 value = func(*args, **kwargs)
-                cache.set(key, value, timeout, **backend_kwargs)
+                cache_backend.set(key, value, timeout, **backend_kwargs)
                 
             return value
 
@@ -50,7 +55,7 @@ def cached(timeout, group=None):
             if not hasattr(wrapper, '_full_name'):
                 return
             key = get_key(wrapper._full_name, 'function', args, kwargs)
-            cache.delete(key, **backend_kwargs)
+            cache_backend.delete(key, **backend_kwargs)
         
         def force_recalc(*args, **kwargs):
             '''
@@ -59,7 +64,7 @@ def cached(timeout, group=None):
             full_name(*args)
             key = get_key(wrapper._full_name, func_type, args, kwargs)
             value = func(*args, **kwargs)
-            cache.set(key, value, timeout, **backend_kwargs)
+            cache_backend.set(key, value, timeout, **backend_kwargs)
             return value
 
         def full_name(*args):
