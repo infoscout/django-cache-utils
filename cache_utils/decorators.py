@@ -1,7 +1,11 @@
 #coding: utf-8
+import logging
+
+from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
 from django.core.cache import get_cache
 from django.utils.functional import wraps
-from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
+
+logger = logging.getLogger("cache_utils")
 
 def cached(timeout, group=None, backend=None):
     """ Caching decorator. Can be applied to function, method or classmethod.
@@ -32,7 +36,8 @@ def cached(timeout, group=None, backend=None):
         cache_backend = get_cache('default')
 
     def _cached(func):
-
+        
+        #if not key:
         func_type = _func_type(func)
 
         @wraps(func)
@@ -45,23 +50,30 @@ def cached(timeout, group=None, backend=None):
             
             # in case of cache miss recalculate the value and put it to the cache
             if value is None:
+                logger.debug("Cache MISS: %s" % key)
                 value = func(*args, **kwargs)
                 cache_backend.set(key, value, timeout, **backend_kwargs)
-                
+                logger.debug("Cache SET: %s" % key)
+            else:
+                logger.debug("Cache HIT: %s" % key)
+            
             return value
 
         def invalidate(*args, **kwargs):
             ''' invalidates cache result for function called with passed arguments '''
             if not hasattr(wrapper, '_full_name'):
                 return
+
             key = get_key(wrapper._full_name, 'function', args, kwargs)
             cache_backend.delete(key, **backend_kwargs)
-        
+            logger.debug("Cache DELETE: %s" % key)
+            
         def force_recalc(*args, **kwargs):
             '''
             forces a call to the function & sets the new value in the cache
             '''
             full_name(*args)
+
             key = get_key(wrapper._full_name, func_type, args, kwargs)
             value = func(*args, **kwargs)
             cache_backend.set(key, value, timeout, **backend_kwargs)

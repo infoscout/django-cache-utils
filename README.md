@@ -1,10 +1,9 @@
-==================
-django-cache-utils
-==================
+# django-cache-utils
+
 
 django-cache-utils provides some utils for make cache-related work easier:
 
-* ``cached`` decorator. It can be applied to function, method or classmethod
+* `cached` decorator. It can be applied to function, method or classmethod
   and can be used with any django cache backend (built-in or third-party like
   django-newcache).
 
@@ -17,26 +16,28 @@ django-cache-utils provides some utils for make cache-related work easier:
   same arguments as function and the cached result for these arguments will be
   invalidated.
 
-* ``group_backend``. It is a django memcached cache backend with group O(1)
+* `group_backend`. It is a django memcached cache backend with group O(1)
   invalidation ability, dog-pile effect prevention using MintCache algorythm
   and project version support to allow gracefull updates and multiple django
   projects on same memcached instance.
   Long keys (>250) are auto-truncated and appended with md5 hash.
 
-Installation
-============
 
-::
+* `cache_utils.cacche get`, `cache_utils.cache.set`, `cache_utils.delete` are wrappers
+  for the standard django cache get, set, delete calls. Implements additional logging
+  and support for non-string keys. 
+  
+
+### Installation
 
     pip install django-cache-utils
 
-and then (optional)::
+and then (optional):
 
     # settings.py
     CACHE_BACKEND = 'cache_utils.group_backend://localhost:11211/'
 
-Usage
-=====
+### Usage
 
 `cached` decorator can be used with any django caching backend (built-in or
 third-party like django-newcache)::
@@ -112,8 +113,8 @@ With ``group_backend`` `cached` decorator supports bulk O(1) invalidation::
     pre_delete.connect(invalidate_city, City)
     post_save.connect(invalidate_city, City)
 
-Notes
-=====
+
+### Notes
 
 If decorated function returns None cache will be bypassed.
 
@@ -134,11 +135,13 @@ argument is passed to 'cached' decorator::
     # 2 reads from memcached + ability to invalidate all values at once
     value2 = bar(1)
 
+### Logging
 
-Running tests
-=============
+Turn on 'cache_utils' logger to DEBUG to log all cache set, hit, deletes.
 
-::
+
+### Running tests
+
 
     cd test_project
     ./runtests.py
