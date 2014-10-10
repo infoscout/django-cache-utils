@@ -60,7 +60,9 @@ def cached(timeout, group=None, backend=None):
             return value
 
         def invalidate(*args, **kwargs):
-            ''' invalidates cache result for function called with passed arguments '''
+            """ 
+            Invalidates cache result for function called with passed arguments
+            """
             if not hasattr(wrapper, '_full_name'):
                 return
 
@@ -69,9 +71,9 @@ def cached(timeout, group=None, backend=None):
             logger.debug("Cache DELETE: %s" % key)
             
         def force_recalc(*args, **kwargs):
-            '''
-            forces a call to the function & sets the new value in the cache
-            '''
+            """
+            Forces a call to the function & sets the new value in the cache
+            """
             full_name(*args)
 
             key = get_key(wrapper._full_name, func_type, args, kwargs)
@@ -84,9 +86,25 @@ def cached(timeout, group=None, backend=None):
             if not hasattr(wrapper, '_full_name'):
                 name, _args = _func_info(func, args)
                 wrapper._full_name = name
-
+        
+        def require_cache(*args, **kwargs):
+            """
+            Only pull from cache, do not attempt to calculate
+            """
+            full_name(*args)
+            key = get_key(wrapper._full_name, func_type, args, kwargs)
+            value = cache_backend.get(key, **backend_kwargs)
+            if not value:
+                raise NoCachedValueException
+            return value
+        
+        wrapper.require_cache = require_cache
         wrapper.invalidate = invalidate
         wrapper.force_recalc = force_recalc
         
         return wrapper
     return _cached
+
+
+class NoCachedValueException(Exception):
+    pass

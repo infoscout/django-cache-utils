@@ -23,7 +23,7 @@ django-cache-utils provides some utils for make cache-related work easier:
   Long keys (>250) are auto-truncated and appended with md5 hash.
 
 
-* `cache_utils.cacche get`, `cache_utils.cache.set`, `cache_utils.delete` are wrappers
+* `cache_utils.cache get`, `cache_utils.cache.set`, `cache_utils.delete` are wrappers
   for the standard django cache get, set, delete calls. Implements additional logging
   and support for non-string keys. 
   
@@ -39,8 +39,7 @@ and then (optional):
 
 ### Usage
 
-`cached` decorator can be used with any django caching backend (built-in or
-third-party like django-newcache)::
+`cached` decorator can be used with any django caching backend (built-in or third-party like django-newcache)::
 
     from cache_utils.decorators import cached
 
@@ -56,8 +55,10 @@ third-party like django-newcache)::
     foo.invalidate(1,2)
     foo(1,2) # foo is called
     foo(5,6)
+    foo.force_recalc(5,6) # foo is called
     foo(x=2) # foo is called
     foo(x=2)
+    foo.require_cache(7,8) # NoCachedValueException is thrown
 
     class Foo(object):
         @cached(60)
@@ -112,6 +113,20 @@ With ``group_backend`` `cached` decorator supports bulk O(1) invalidation::
         cache.invalidate_group('cities')
     pre_delete.connect(invalidate_city, City)
     post_save.connect(invalidate_city, City)
+
+
+You can force cache to be recalculated:
+
+    @cached
+    def calc_function(x,y):
+        return x*y
+        
+    x = calc_function.force_recalc(x,y)
+    
+    
+Or if you don't want to 
+
+
 
 
 ### Notes
