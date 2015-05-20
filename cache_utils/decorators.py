@@ -93,8 +93,10 @@ def cached(timeout, group=None, backend=None):
             """
             full_name(*args)
             key = get_key(wrapper._full_name, func_type, args, kwargs)
+            logger.debug("Require cache %s" % key)
             value = cache_backend.get(key, **backend_kwargs)
             if not value:
+                logger.info("Could not find required cache %s" % key)
                 raise NoCachedValueException
             return value
         
