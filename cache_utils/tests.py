@@ -170,3 +170,14 @@ class DecoratorTest(ClearMemcachedTest):
 
         func(Store())
 
+    def test_key_override(self):
+
+        @cached(60*5, key='giant')
+        def maker():
+            return 'panda'
+
+        key = maker.get_cache_key()
+        self.assertEqual(key, 'giant')
+
+        value = maker()
+        self.assertEqual(value, 'panda')
