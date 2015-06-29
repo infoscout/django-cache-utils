@@ -1,0 +1,15 @@
+machine:
+  python:
+    version: 2.7.3
+
+dependencies:
+#general:
+#  branches:
+#    only:
+#      - master
+#      - feat/* # or regexes
+
+test:
+  override:
+# Add additional unit tests here:
+    - python ~/test_project/runtests.py
