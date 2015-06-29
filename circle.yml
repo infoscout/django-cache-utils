@@ -2,6 +2,10 @@ machine:
   python:
     version: 2.7.3
 
+dependencies:
+  override:
+    - python setup.py develop
+
 test:
   override:
     - python ./test_project/runtests.py
