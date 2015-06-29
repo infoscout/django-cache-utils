@@ -4,4 +4,4 @@ machine:
 
 test:
   override:
-    - python ~/test_project/runtests.py
+    - python ,/test_project/runtests.py
