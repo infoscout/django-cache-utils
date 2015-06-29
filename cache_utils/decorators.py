@@ -24,7 +24,12 @@ def cached(timeout, group=None, backend=None, key=None):
 
 
     if key:
-        _get_key = lambda *args, **kwargs: sanitize_memcached_key(key)
+        def test(*args, **kwargs):
+            args = list(args)
+            args[0] = key 
+            return sanitize_memcached_key(_cache_key(*args, **kwargs))
+        _get_key = test
+        
     else:
         _get_key = lambda *args, **kwargs: sanitize_memcached_key(_cache_key(*args, **kwargs))
 

@@ -171,13 +171,22 @@ class DecoratorTest(ClearMemcachedTest):
 #         func(Store())
 
     def test_key_override(self):
+        """
+        Test the cache key naming.
+        """
+        
+        @cached(60*5, key='foo')
+        def foo():
+            return 'test'
+        
+        key = foo.get_cache_key()
+        self.assertEqual(key, '[cached]foo()')
 
-        @cached(60*5, key='giant')
-        def maker():
-            return 'panda'
+        # Now test with args and kwargs argo
+        @cached(60*5, key='func_with_args')
+        def bar(i,foo='bar'):
+            return i * 5
 
-        key = maker.get_cache_key()
-        self.assertEqual(key, 'giant')
+        key = bar.get_cache_key(2, foo='hello')
+        self.assertEqual(key, "[cached]func_with_args((2,){'foo':'hello'})")
 
-        value = maker()
-        self.assertEqual(value, 'panda')

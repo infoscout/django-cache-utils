@@ -50,14 +50,22 @@ and then (optional):
 
     foo(1,2) # foo is called
     foo(1,2)
+    
     foo(5,6) # foo is called
     foo(5,6)
+    
+    # Invalidation
     foo.invalidate(1,2)
     foo(1,2) # foo is called
+    
+    # Force calculation
     foo(5,6)
     foo.force_recalc(5,6) # foo is called
+    
     foo(x=2) # foo is called
     foo(x=2)
+    
+    # Require cache
     foo.require_cache(7,8) # NoCachedValueException is thrown
 
     class Foo(object):
@@ -126,7 +134,25 @@ You can force cache to be recalculated:
     
 Or if you don't want to 
 
+### Key Names
 
+By default, django-cache-utils constructs a key based on the function name, line number, args, and kwargs. Example:
+
+    @cached(60)
+    def foo(a1):
+       ...
+        
+    print foo.get_cache_key('test') # ==> '[cached]package.module:15(('test',))'
+	
+Note given the line-number is included in the cache key, simple tweaks to a module not releveant to the @cached function will create a new cache key (and thus upon release old cached items will not get hit).
+
+In these instances, it's recommended to provide a `key` argument to the @cached decorate. 
+
+    @cached(60, key='foo')
+    def foo(a1):
+       ...
+        
+    print foo.get_cache_key('test') # ==> '[cached]foo(('test',))'
 
 
 ### Notes
