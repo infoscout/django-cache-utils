@@ -68,6 +68,9 @@ and then (optional):
     # Require cache
     foo.require_cache(7,8) # NoCachedValueException is thrown
 
+
+The `@cached` decorator is also supported on class methods
+
     class Foo(object):
         @cached(60)
         def foo(self, x,y):
@@ -130,11 +133,9 @@ You can force cache to be recalculated:
         return x*y
         
     x = calc_function.force_recalc(x,y)
-    
-    
-Or if you don't want to 
+   
 
-### Key Names
+### Cache Keys
 
 By default, django-cache-utils constructs a key based on the function name, line number, args, and kwargs. Example:
 
@@ -180,9 +181,7 @@ argument is passed to 'cached' decorator::
 
 Turn on 'cache_utils' logger to DEBUG to log all cache set, hit, deletes.
 
-
 ### Running tests
-
 
     cd test_project
     ./runtests.py
