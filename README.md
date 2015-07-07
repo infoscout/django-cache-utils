@@ -1,7 +1,7 @@
 # django-cache-utils
 
 
-django-cache-utils provides some utils for make cache-related work easier:
+django-cache-utils provides utils for make cache-related work easier:
 
 * `cached` decorator. It can be applied to function, method or classmethod
   and can be used with any django cache backend (built-in or third-party like
@@ -147,7 +147,7 @@ By default, django-cache-utils constructs a key based on the function name, line
 	
 Note given the line-number is included in the cache key, simple tweaks to a module not releveant to the @cached function will create a new cache key (and thus upon release old cached items will not get hit).
 
-In these instances, it's recommended to provide a `key` argument to the @cached decorate. 
+In these instances, it's recommended to provide an explicit `key` kwarg argument to the `@cached` decorator. 
 
     @cached(60, key='foo')
     def foo(a1):
@@ -179,7 +179,7 @@ argument is passed to 'cached' decorator::
 
 ### Logging
 
-Turn on 'cache_utils' logger to DEBUG to log all cache set, hit, deletes.
+Turn on `cache_utils` logger to DEBUG to log all cache set, hit, deletes.
 
 ### Running tests
 
