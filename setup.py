@@ -2,7 +2,7 @@
 # from distutils.core import setup
 from setuptools import setup
 
-version='1.1'
+version='1.1.2'
 
 setup(
     name='django-cache-utils',
