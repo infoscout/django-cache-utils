@@ -1,8 +1,9 @@
 from hashlib import md5
-from django.utils.encoding  import smart_unicode
+from django.utils.encoding import smart_text
 
-CONTROL_CHARACTERS = set([chr(i) for i in range(0,33)])
+CONTROL_CHARACTERS = set([chr(i) for i in range(0, 33)])
 CONTROL_CHARACTERS.add(chr(127))
+
 
 def sanitize_memcached_key(key, max_length=250):
     """ Removes control characters and ensures that key will
@@ -11,9 +12,14 @@ def sanitize_memcached_key(key, max_length=250):
     """
     key = ''.join([c for c in key if c not in CONTROL_CHARACTERS])
     if len(key) > max_length:
-        hash = md5(key).hexdigest()
-        key = key[:max_length-33]+'-'+hash
+        try:
+            from django.utils.encoding import force_bytes
+            return md5(force_bytes(key)).hexdigest()
+        except ImportError:  # Python 2
+            hash = md5(key).hexdigest()
+        key = key[:max_length - 33] + '-' + hash
     return key
+
 
 def _args_to_unicode(args, kwargs):
     key = ""
@@ -61,5 +67,5 @@ def _cache_key(func_name, func_type, args, kwargs):
         args_string = _args_to_unicode(args, kwargs)
     else:
         args_string = _args_to_unicode(args[1:], kwargs)
-    
+
     return '[cached]%s(%s)' % (func_name, args_string,)
