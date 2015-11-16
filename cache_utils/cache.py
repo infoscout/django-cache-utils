@@ -1,4 +1,4 @@
-from django.core.cache import get_cache
+from django.core.cache import caches
 import logging
 import sys
 
@@ -18,7 +18,7 @@ def get(key, backend=None):
     """
     
     backend = backend or 'default'
-    cache = get_cache(backend)
+    cache = caches[backend]
     key = _generate_key(key)
     val = cache.get(key)
     
@@ -35,7 +35,7 @@ def set(key, value, backend=None):
     """
     
     backend = backend or 'default'
-    cache = get_cache(backend)
+    cache = caches[backend]
     key = _generate_key(key)
     
     val = cache.set(key, value)
@@ -49,7 +49,7 @@ def delete(key, backend=None):
     """
     
     backend = backend or 'default'
-    cache = get_cache(backend)
+    cache = caches[backend]
     key = _generate_key(key)
     
     val = cache.delete(key)

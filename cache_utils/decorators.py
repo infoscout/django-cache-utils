@@ -2,7 +2,7 @@
 import logging
 
 from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
-from django.core.cache import get_cache
+from django.core.cache import caches
 from django.utils.functional import wraps
 
 logger = logging.getLogger("cache_utils")
@@ -41,9 +41,9 @@ def cached(timeout, group=None, backend=None, key=None):
 
 
     if backend:
-        cache_backend = get_cache(backend)
+        cache_backend = caches[backend]
     else:
-        cache_backend = get_cache('default')
+        cache_backend = caches['default']
 
 
     def _cached(func):
