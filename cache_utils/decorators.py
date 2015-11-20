@@ -26,10 +26,10 @@ def cached(timeout, group=None, backend=None, key=None):
     if key:
         def test(*args, **kwargs):
             args = list(args)
-            args[0] = key 
+            args[0] = key
             return sanitize_memcached_key(_cache_key(*args, **kwargs))
         _get_key = test
-        
+
     else:
         _get_key = lambda *args, **kwargs: sanitize_memcached_key(_cache_key(*args, **kwargs))
 
@@ -57,7 +57,7 @@ def cached(timeout, group=None, backend=None, key=None):
             # try to get the value from cache
             key = _get_key(wrapper._full_name, func_type, args, kwargs)
             value = cache_backend.get(key, **backend_kwargs)
-            
+
             # in case of cache miss recalculate the value and put it to the cache
             if value is None:
                 logger.debug("Cache MISS: %s" % key)
@@ -66,15 +66,14 @@ def cached(timeout, group=None, backend=None, key=None):
                 logger.debug("Cache SET: %s" % key)
             else:
                 logger.debug("Cache HIT: %s" % key)
-            
+
             return value
 
         def invalidate(*args, **kwargs):
-            """ 
+            """
             Invalidates cache result for function called with passed arguments
             """
-            if not hasattr(wrapper, '_full_name'):
-                return
+            full_name(*args)
 
             key = _get_key(wrapper._full_name, 'function', args, kwargs)
             cache_backend.delete(key, **backend_kwargs)
