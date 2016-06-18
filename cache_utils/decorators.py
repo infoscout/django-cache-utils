@@ -73,6 +73,7 @@ def cached(timeout, group=None, backend=None, key=None):
             """ 
             Invalidates cache result for function called with passed arguments
             """
+            full_name(*args)
             if not hasattr(wrapper, '_full_name'):
                 return
 
