@@ -4,7 +4,7 @@ machine:
 
 dependencies:
   override:
-    - pip install django==1.4.16
+    - pip install django==1.4.22
     - pip install python-memcached==1.58
     - python setup.py develop
 
