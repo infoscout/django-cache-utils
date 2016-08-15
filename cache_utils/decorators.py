@@ -2,10 +2,11 @@
 import logging
 
 from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
-from django.core.cache import get_cache
+from django.core import signals
 from django.utils.functional import wraps
 
 logger = logging.getLogger("cache_utils")
+
 
 def cached(timeout, group=None, backend=None, key=None):
     """ Caching decorator. Can be applied to function, method or classmethod.
@@ -40,10 +41,18 @@ def cached(timeout, group=None, backend=None, key=None):
         backend_kwargs = {}
 
 
-    if backend:
-        cache_backend = get_cache(backend)
-    else:
-        cache_backend = get_cache('default')
+    try:
+        from django.core.cache import caches
+        if backend:
+            cache_backend = caches[backend]
+        else:
+            cache_backend = caches['default']
+    except ImportError:  # Django < 1.7
+        from django.core.cache import get_cache
+        if backend:
+            cache_backend = get_cache(backend)
+        else:
+            cache_backend = get_cache('default')
 
 
     def _cached(func):

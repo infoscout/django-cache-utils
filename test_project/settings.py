@@ -15,6 +15,8 @@ CACHES = {
     },
 }
 
+SECRET_KEY="asdf"
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',  
