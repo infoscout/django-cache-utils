@@ -18,7 +18,7 @@ setup(
     description = """ Caching decorator and django cache backend with advanced invalidation ability and dog-pile effect prevention """,
 
     long_description = open('README.md').read(),
-    requires = ['django', 'memcached'],
+    requires = ['django', 'python_memcached'],
 
     classifiers=(
         'Development Status :: 4 - Beta',
