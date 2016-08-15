@@ -25,9 +25,9 @@ def sanitize_memcached_key(key, max_length=250):
 def _args_to_unicode(args, kwargs):
     key = ""
     if args:
-        key += smart_unicode(args)
+        key += smart_text(args)
     if kwargs:
-        key += smart_unicode(kwargs)
+        key += smart_text(kwargs)
     return key
 
 
