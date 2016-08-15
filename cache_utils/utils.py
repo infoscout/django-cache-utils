@@ -1,3 +1,4 @@
+import six
 from hashlib import md5
 from django.utils.encoding import smart_text
 
@@ -32,7 +33,7 @@ def _args_to_unicode(args, kwargs):
 
 def _func_type(func):
     """ returns if callable is a function, method or a classmethod """
-    argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
+    argnames = six.get_function_code(func).co_varnames[:six.get_function_code(func).co_argcount]
     if len(argnames) > 0:
         if argnames[0] == 'self':
             return 'method'
@@ -47,7 +48,7 @@ def _func_info(func, args):
     'cls' and 'self' removed from normalized_args '''
 
     func_type = _func_type(func)
-    lineno = ":%s" % func.func_code.co_firstlineno
+    lineno = ":%s" % six.get_function_code(func).co_firstlineno
 
     if func_type == 'function':
         name = ".".join([func.__module__, func.__name__]) + lineno
