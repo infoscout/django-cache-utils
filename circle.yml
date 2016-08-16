@@ -1,13 +1,43 @@
 machine:
-  python:
-    version: 2.7.3
+  services:
+    - memcached
+  post:
+    - pyenv install 2.5.6
+    - pyenv install 2.6.9
+    - pyenv global 2.5.6 2.6.9 2.7.11 3.3.5 3.4.3 3.5.1
 
 dependencies:
   override:
-    - pip install django==1.4.22
-    - pip install python-memcached==1.58
-    - python setup.py develop
+    - pip install python-memcached
+    - pip install tox
 
 test:
   override:
-    - python ./test_project/runtests.py
+    - tox -e py26-dj14
+    - tox -e py26-dj15
+    - tox -e py26-dj16
+
+    - tox -e py27-dj14
+    - tox -e py27-dj15
+    - tox -e py27-dj16
+    - tox -e py27-dj17
+    - tox -e py27-dj18
+    - tox -e py27-dj19
+    - tox -e py27-dj110
+    - tox -e py27-djmaster
+
+    - tox -e py33-dj16
+    - tox -e py33-dj17
+    - tox -e py33-dj18
+
+    - tox -e py34-dj16
+    - tox -e py34-dj17
+    - tox -e py34-dj18
+    - tox -e py34-dj19
+    - tox -e py34-dj110
+    - tox -e py34-djmaster
+
+    - tox -e py35-dj18
+    - tox -e py35-dj19
+    - tox -e py35-dj110
+    - tox -e py35-djmaster
