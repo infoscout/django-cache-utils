@@ -111,7 +111,7 @@ With ``group_backend`` `cached` decorator supports bulk O(1) invalidation::
             @cached(30)
             def offer_count(pk):
                 return self.offer_set.count()
-            return history_count(self.pk) > 0
+            return offer_count(self.pk) > 0
 
     # cache the function result based on passed parameter
     @cached(60*60*24, 'cities')
