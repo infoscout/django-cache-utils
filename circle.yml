@@ -17,11 +17,9 @@ dependencies:
 
 test:
   override:
-    - tox -e py26-dj14
     - tox -e py26-dj15
     - tox -e py26-dj16
 
-    - tox -e py27-dj14
     - tox -e py27-dj15
     - tox -e py27-dj16
     - tox -e py27-dj17
