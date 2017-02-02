@@ -14,7 +14,9 @@ setup(
     url='http://bitbucket.org/kmike/django-cache-utils/',
     download_url='http://bitbucket.org/kmike/django-cache-utils/get/tip.zip',
     license='MIT license',
-    description="Caching decorator and django cache backend with advanced invalidation ability and dog-pile effect prevention",
+    description=(
+        "Caching decorator and django cache backend with advanced invalidation ability and dog-pile effect prevention"
+    ),
     long_description=open('README.md').read(),
     requires=['django', 'python_memcached'],
     classifiers=(
