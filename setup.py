@@ -18,7 +18,7 @@ setup(
         "Caching decorator and django cache backend with advanced invalidation ability and dog-pile effect prevention"
     ),
     long_description=open('README.md').read(),
-    requires=['Django>=1.5', 'python_memcached'],
+    install_requires=['Django>=1.5', 'python_memcached'],
     classifiers=(
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
