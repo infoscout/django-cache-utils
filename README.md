@@ -31,6 +31,10 @@ django-cache-utils provides utils for make cache-related work easier:
 ### Installation
 
     pip install django-cache-utils
+    
+or, for Python 3 support install version 2.0.0:
+   
+    pip install git+https://github.com/infoscout/django-cache-utils.git@2.0.0
 
 and then (optional):
 
