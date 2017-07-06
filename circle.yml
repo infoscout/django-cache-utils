@@ -2,6 +2,7 @@ machine:
   services:
     - memcached
   post:
+    - pyenv update
     - pyenv install 2.7.11 --skip-existing
     - pyenv install 3.3.5 --skip-existing
     - pyenv install 3.4.3 --skip-existing
