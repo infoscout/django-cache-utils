@@ -1,6 +1,8 @@
 machine:
   services:
     - memcached
+  pre:
+    - cd .pyenv; git pull
   post:
     - pyenv install 2.7.11 --skip-existing
     - pyenv install 3.3.5 --skip-existing
