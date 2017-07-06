@@ -1,5 +1,6 @@
 # django-cache-utils
 
+[![CircleCI](https://circleci.com/gh/infoscout/django-cache-utils.svg?style=svg)](https://circleci.com/gh/infoscout/django-cache-utils)
 
 django-cache-utils provides utils for make cache-related work easier:
 
