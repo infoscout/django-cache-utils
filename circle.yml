@@ -11,7 +11,6 @@ machine:
 
 dependencies:
   override:
-    - pip install python-memcached
     - pip install tox
 
 test:
