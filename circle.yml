@@ -6,8 +6,8 @@ machine:
     - pyenv install 3.3.5 --skip-existing
     - pyenv install 3.4.3 --skip-existing
     - pyenv install 3.5.1 --skip-existing
-    - pyenv install 3.6.1 --skip-existing
-    - pyenv global 2.7.11 3.3.5 3.4.3 3.5.1 3.6.1
+    - pyenv install 3.6.0 --skip-existing
+    - pyenv global 2.7.11 3.3.5 3.4.3 3.5.1 3.6.0
     - pip install --upgrade virtualenv
 
 dependencies:
