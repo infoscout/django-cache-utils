@@ -11,8 +11,7 @@ setup(
     author='Mikhail Korobov',
     author_email='kmike84@gmail.com',
     packages=['cache_utils'],
-    url='http://bitbucket.org/kmike/django-cache-utils/',
-    download_url='http://bitbucket.org/kmike/django-cache-utils/get/tip.zip',
+    url='https://github.com/infoscout/django-cache-utils',
     license='MIT license',
     description=(
         "Caching decorator and django cache backend with advanced invalidation ability and dog-pile effect prevention"
