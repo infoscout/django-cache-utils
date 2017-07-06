@@ -25,8 +25,8 @@ django-cache-utils provides utils for make cache-related work easier:
 
 * `cache_utils.cache get`, `cache_utils.cache.set`, `cache_utils.delete` are wrappers
   for the standard django cache get, set, delete calls. Implements additional logging
-  and support for non-string keys. 
-  
+  and support for non-string keys.
+
 
 ### Installation
 
@@ -158,7 +158,7 @@ print foo.get_cache_key('test') # ==> '[cached]package.module:15(('test',))'
 
 Note given the line-number is included in the cache key, simple tweaks to a module not releveant to the @cached function will create a new cache key (and thus upon release old cached items will not get hit).
 
-In these instances, it's recommended to provide an explicit `key` kwarg argument to the `@cached` decorator. 
+In these instances, it's recommended to provide an explicit `key` kwarg argument to the `@cached` decorator.
 
 ```
 @cached(60, key='foo')
