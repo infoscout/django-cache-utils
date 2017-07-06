@@ -2,12 +2,11 @@ machine:
   services:
     - memcached
   post:
-    - pyenv install 2.6.9 --skip-existing
     - pyenv install 2.7.11 --skip-existing
     - pyenv install 3.3.5 --skip-existing
     - pyenv install 3.4.3 --skip-existing
     - pyenv install 3.5.1 --skip-existing
-    - pyenv global 2.6.9 2.7.11 3.3.5 3.4.3 3.5.1
+    - pyenv global 2.7.11 3.3.5 3.4.3 3.5.1
     - pip install --upgrade virtualenv
 
 dependencies:
@@ -17,9 +16,6 @@ dependencies:
 
 test:
   override:
-    - tox -e py26-dj15
-    - tox -e py26-dj16
-
     - tox -e py27-dj15
     - tox -e py27-dj16
     - tox -e py27-dj17
