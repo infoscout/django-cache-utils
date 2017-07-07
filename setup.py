@@ -2,7 +2,7 @@
 from setuptools import setup, Command
 
 
-version = '2.0.0'
+version = '3.0.0'
 
 
 class TestCommand(Command):
@@ -38,7 +38,7 @@ class TestCommand(Command):
 
 
 setup(
-    name='django-cache-utils',
+    name='djcacheutils',
     version=version,
     author='Mikhail Korobov',
     author_email='kmike84@gmail.com',

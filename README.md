@@ -33,7 +33,7 @@ django-cache-utils provides utils for make cache-related work easier:
 ### Installation
 
 ```shell
-$ pip install django-cache-utils
+$ pip install djcacheutils
 ```
 
 and then (optional):
