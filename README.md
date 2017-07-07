@@ -40,6 +40,10 @@ and then (optional):
 
 ```python
 # settings.py
+INSTALLED_APPS = (
+  'cache_utils',
+  ...
+)
 CACHES = {
     'default': {
         'BACKEND': 'cache_utils.group_backend.CacheClass',
