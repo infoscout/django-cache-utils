@@ -3,7 +3,6 @@
 import logging
 
 from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
-from django.core import signals
 from django.utils.functional import wraps
 
 logger = logging.getLogger("cache_utils")

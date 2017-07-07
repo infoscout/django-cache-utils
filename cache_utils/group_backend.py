@@ -6,8 +6,6 @@ Long keys (>250) are truncated and appended with md5 hash.
 """
 
 import uuid
-import logging
-import sys
 import time
 from django.core.cache.backends.memcached import MemcachedCache
 from django.conf import settings
