@@ -55,14 +55,14 @@ class FuncInfoTest(TestCase):
         self.assertEqual(info[1], args_out)
 
     def test_func(self):
-        self.assertFuncInfo(foo, [1, 2], 'cache_utils.tests.foo:9', [1, 2])
+        self.assertFuncInfo(foo, [1, 2], 'cache_utils.tests.foo:11', [1, 2])
 
     def test_method(self):
         foo_obj = Foo()
-        self.assertFuncInfo(Foo.foo, [foo_obj, 1, 2], 'cache_utils.tests.Foo.foo:13', [1, 2])
+        self.assertFuncInfo(Foo.foo, [foo_obj, 1, 2], 'cache_utils.tests.Foo.foo:17', [1, 2])
 
     def test_classmethod(self):
-        self.assertFuncInfo(Foo.bar, [Foo, 1], 'cache_utils.tests.Foo.bar:15', [1])
+        self.assertFuncInfo(Foo.bar, [Foo, 1], 'cache_utils.tests.Foo.bar:20', [1])
 
 
 class SanitizeTest(TestCase):
