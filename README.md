@@ -33,7 +33,7 @@ django-cache-utils provides utils for make cache-related work easier:
 ### Installation
 
 ```shell
-pip install django-cache-utils
+$ pip install django-cache-utils
 ```
 
 and then (optional):
@@ -200,6 +200,6 @@ Turn on `cache_utils` logger to DEBUG to log all cache set, hit, deletes.
 ### Running tests
 
 ```shell
-cd test_project
-./runtests.py
+$ cd test_project
+$ python manage.py test
 ```
