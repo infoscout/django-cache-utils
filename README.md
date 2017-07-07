@@ -40,7 +40,12 @@ and then (optional):
 
 ```python
 # settings.py
-CACHE_BACKEND = 'cache_utils.group_backend://localhost:11211/'
+CACHES = {
+    'default': {
+        'BACKEND': 'cache_utils.group_backend.CacheClass',
+        'LOCATION': '127.0.0.1:11211',
+    },
+}
 ```
 
 ### Usage
