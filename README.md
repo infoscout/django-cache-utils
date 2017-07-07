@@ -41,8 +41,8 @@ and then (optional):
 ```python
 # settings.py
 INSTALLED_APPS = (
-  'cache_utils',
-  ...
+    'cache_utils',
+    ...
 )
 CACHES = {
     'default': {
