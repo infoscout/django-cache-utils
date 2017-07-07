@@ -1,6 +1,7 @@
-from django.core.cache import get_cache
 import logging
 import sys
+
+from django.core.cache import get_cache
 
 
 logger = logging.getLogger("cache_utils")

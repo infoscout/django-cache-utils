@@ -2,8 +2,10 @@
 
 import logging
 
-from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
 from django.utils.functional import wraps
+
+from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
+
 
 logger = logging.getLogger("cache_utils")
 

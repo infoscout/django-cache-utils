@@ -5,18 +5,19 @@ gracefull updates and multiple django projects on same memcached instance.
 Long keys (>250) are truncated and appended with md5 hash.
 """
 
-import uuid
 import time
-from django.core.cache.backends.memcached import MemcachedCache
+import uuid
+
 from django.conf import settings
+from django.core.cache.backends.memcached import MemcachedCache
 from django.utils.encoding import smart_str
 
 from cache_utils.utils import sanitize_memcached_key
 
+
 # This prefix is appended to the group name to prevent cache key clashes.
 _VERSION_PREFIX = getattr(settings, 'VERSION', "")
 _KEY_PREFIX = "_group::"
-
 
 # MINT_DELAY is an upper bound on how long any value should take to
 # be generated (in seconds)

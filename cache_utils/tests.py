@@ -3,6 +3,7 @@
 from unittest import TestCase
 
 from django.core.cache import cache
+
 from cache_utils.decorators import cached
 from cache_utils.utils import sanitize_memcached_key, _func_type, _func_info
 

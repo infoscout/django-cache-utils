@@ -1,6 +1,8 @@
-import six
 from hashlib import md5
+
 from django.utils.encoding import smart_text
+import six
+
 
 CONTROL_CHARACTERS = set([chr(i) for i in range(0, 33)])
 CONTROL_CHARACTERS.add(chr(127))
