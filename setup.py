@@ -1,8 +1,40 @@
 #!/usr/bin/env python
-from setuptools import setup
+from setuptools import setup, Command
 
 
 version = '2.0.0'
+
+
+class TestCommand(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import django
+        from django.conf import settings
+        from django.core.management import call_command
+
+        settings.configure(
+            CACHES={
+                'default': {
+                    'BACKEND': 'cache_utils.group_backend.CacheClass',
+                    'LOCATION': '127.0.0.1:11211',
+                },
+            },
+            DATABASES={
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                }
+            },
+            INSTALLED_APPS=('cache_utils',)
+        )
+        django.setup()
+        call_command('test')
 
 
 setup(
@@ -36,4 +68,5 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ),
+    cmdclass={'test': TestCommand},
 )

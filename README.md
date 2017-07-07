@@ -200,6 +200,5 @@ Turn on `cache_utils` logger to DEBUG to log all cache set, hit, deletes.
 ### Running tests
 
 ```shell
-$ cd test_project
-$ python manage.py test
+$ python setup.py test
 ```
