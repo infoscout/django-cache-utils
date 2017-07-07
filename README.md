@@ -162,7 +162,7 @@ Note given the line-number is included in the cache key, simple tweaks to a modu
 
 In these instances, it's recommended to provide an explicit `key` kwarg argument to the `@cached` decorator.
 
-```
+```python
 @cached(60, key='foo')
 def foo(a1):
    ...
