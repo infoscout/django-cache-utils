@@ -1,4 +1,4 @@
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 from unittest import TestCase
 
@@ -6,25 +6,33 @@ from django.core.cache import cache
 from cache_utils.decorators import cached
 from cache_utils.utils import sanitize_memcached_key, _func_type, _func_info
 
-def foo(a,b):
+
+def foo(a, b):
     pass
 
+
 class Foo(object):
+
     def foo(self, a, b):
         pass
+
     @classmethod
     def bar(cls, x):
         pass
 
+
 class Store(object):
     """ Class for encoding error test """
+
     def __unicode__(self):
         return u'Вася'
+
     def __repr__(self):
         return u'Вася'.encode('utf8')
 
 
 class FuncTypeTest(TestCase):
+
     def assertFuncType(self, func, tp):
         self.assertEqual(_func_type(func), tp)
 
@@ -39,25 +47,25 @@ class FuncTypeTest(TestCase):
 
 
 class FuncInfoTest(TestCase):
+
     def assertFuncInfo(self, func, args_in, name, args_out):
         info = _func_info(func, args_in)
         self.assertEqual(info[0], name)
         self.assertEqual(info[1], args_out)
 
     def test_func(self):
-        self.assertFuncInfo(foo, [1,2], 'cache_utils.tests.foo:9', [1,2])
+        self.assertFuncInfo(foo, [1, 2], 'cache_utils.tests.foo:9', [1, 2])
 
     def test_method(self):
         foo_obj = Foo()
-        self.assertFuncInfo(Foo.foo, [foo_obj, 1, 2],
-                            'cache_utils.tests.Foo.foo:13', [1,2])
+        self.assertFuncInfo(Foo.foo, [foo_obj, 1, 2], 'cache_utils.tests.Foo.foo:13', [1, 2])
 
     def test_classmethod(self):
-        self.assertFuncInfo(Foo.bar, [Foo, 1],
-                            'cache_utils.tests.Foo.bar:15', [1])
+        self.assertFuncInfo(Foo.bar, [Foo, 1], 'cache_utils.tests.Foo.bar:15', [1])
 
 
 class SanitizeTest(TestCase):
+
     def test_sanitize_keys(self):
         key = u"12345678901234567890123456789012345678901234567890"
         self.assertTrue(len(key) >= 40)
@@ -66,6 +74,7 @@ class SanitizeTest(TestCase):
 
 
 class ClearMemcachedTest(TestCase):
+
     def tearDown(self):
         cache._cache.flush_all()
 
@@ -100,14 +109,14 @@ class InvalidationTest(ClearMemcachedTest):
             self.call_count += 1
             return self.call_count
 
-        self.assertEqual(my_func(1,2), 1)
-        self.assertEqual(my_func(1,2), 1)
-        self.assertEqual(my_func(3,2), 2)
-        self.assertEqual(my_func(3,2), 2)
-        my_func.invalidate(3,2)
-        self.assertEqual(my_func(1,2), 1)
-        self.assertEqual(my_func(3,2), 3)
-        self.assertEqual(my_func(3,2), 3)
+        self.assertEqual(my_func(1, 2), 1)
+        self.assertEqual(my_func(1, 2), 1)
+        self.assertEqual(my_func(3, 2), 2)
+        self.assertEqual(my_func(3, 2), 2)
+        my_func.invalidate(3, 2)
+        self.assertEqual(my_func(1, 2), 1)
+        self.assertEqual(my_func(3, 2), 3)
+        self.assertEqual(my_func(3, 2), 3)
 
     def test_method_invalidation(self):
         self.call_count = 0
@@ -129,7 +138,7 @@ class InvalidationTest(ClearMemcachedTest):
         @cached(60)
         def foo(x):
             return 1
-        foo.invalidate(5) # this shouldn't raise exception
+        foo.invalidate(5)  # this shouldn't raise exception
 
 
 class DecoratorTest(ClearMemcachedTest):
@@ -163,7 +172,7 @@ class DecoratorTest(ClearMemcachedTest):
 #         def func(utf8_array, *args):
 #             return utf8_array
 #         func([u'Василий'.encode('utf8')], u'Петрович'.encode('utf8'))
-#  
+#
 #     def test_utf8_repr(self):
 #         @cached(60)
 #         def func(param):
@@ -174,19 +183,18 @@ class DecoratorTest(ClearMemcachedTest):
         """
         Test the cache key naming.
         """
-        
+
         @cached(60*5, key='foo')
         def foo():
             return 'test'
-        
+
         key = foo.get_cache_key()
         self.assertEqual(key, '[cached]foo()')
 
         # Now test with args and kwargs argo
         @cached(60*5, key='func_with_args')
-        def bar(i,foo='bar'):
+        def bar(i, foo='bar'):
             return i * 5
 
         key = bar.get_cache_key(2, foo='hello')
         self.assertEqual(key, "[cached]func_with_args((2,){'foo':'hello'})")
-
