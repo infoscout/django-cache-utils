@@ -5,11 +5,10 @@ machine:
     - cd .pyenv; git pull
   post:
     - pyenv install 2.7.13 --skip-existing
-    - pyenv install 3.3.6 --skip-existing
     - pyenv install 3.4.6 --skip-existing
     - pyenv install 3.5.3 --skip-existing
     - pyenv install 3.6.1 --skip-existing
-    - pyenv global 2.7.13 3.3.6 3.4.6 3.5.3 3.6.1
+    - pyenv global 2.7.13 3.4.6 3.5.3 3.6.1
     - pip install --upgrade virtualenv
 
 dependencies:
@@ -22,8 +21,6 @@ test:
     - tox -e py27-dj19
     - tox -e py27-dj110
     - tox -e py27-dj111
-
-    - tox -e py33-dj18
 
     - tox -e py34-dj18
     - tox -e py34-dj19
