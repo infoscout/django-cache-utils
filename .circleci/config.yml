@@ -1,0 +1,48 @@
+version: 2
+jobs:
+  test-py27: &test-template
+    docker:
+      - image: circleci/python:2.7
+      - image: memcached
+    environment:
+      - DJANGO_VERSIONS: "18;19;110;111"
+    steps:
+      - checkout
+      - run:
+          name: Setup a virtualenv
+          command: virtualenv venv
+      - run:
+          name: Install tox
+          command: |
+            source venv/bin/activate
+            pip install tox
+      - run:
+          name: Run tests with tox
+          command: |
+            source venv/bin/activate
+            echo $DJANGO_VERSIONS | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
+  test-py34:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.4
+      - image: memcached
+  test-py35:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.5
+      - image: memcached
+  test-py36:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.6
+      - image: memcached
+    environment:
+      - DJANGO_VERSIONS: "111"
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test-py27
+      - test-py34
+      - test-py35
+      - test-py36
