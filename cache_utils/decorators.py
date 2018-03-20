@@ -71,8 +71,7 @@ def cached(timeout, group=None, backend=None, key=None):
             """
             Invalidates cache result for function called with passed arguments
             """
-            if not hasattr(wrapper, '_full_name'):
-                return
+            full_name(*args)
 
             key = _get_key(wrapper._full_name, 'function', args, kwargs)
             cache_backend.delete(key, **backend_kwargs)
