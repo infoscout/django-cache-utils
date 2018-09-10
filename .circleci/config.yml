@@ -4,6 +4,7 @@ jobs:
     docker:
       - image: circleci/python:2.7
       - image: memcached
+    resource_class: small
     environment:
       - DJANGO_VERSIONS: "18;19;110;111"
     steps:
