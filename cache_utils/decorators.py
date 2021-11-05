@@ -136,8 +136,6 @@ def cached(timeout, group=None, backend=None, key=None, model_list=[]):
         wrapper.get_cache_key = get_cache_key
 
         registry.register_key(model_list, wrapper)
-        from pprint import pprint
-        pprint(registry)
         return wrapper
     return _cached
 
@@ -147,6 +145,7 @@ class NoCachedValueException(Exception):
 
 def invalidate_model(sender, instance, *args, **kwargs):
     keys = registry.retrieve_keys(sender)
+    print(sender, keys)
     for key in keys:
         key.invalidate(*args, **kwargs)
 
