@@ -143,9 +143,9 @@ def cached(timeout, group=None, backend=None, key=None, model_list=[]):
 class NoCachedValueException(Exception):
     pass
 
-def force_recalc_model(sender, instance, **kwargs):
+def invalidate_model(sender, instance, *args, **kwargs):
     keys = registry.retrieve_keys(sender)
     for key in keys:
-        key.force_recalc()
+        key.invalidate(*args, **kwargs)
 
-models.signals.post_save.connect(force_recalc_model)
+models.signals.post_save.connect(invalidate_model)
