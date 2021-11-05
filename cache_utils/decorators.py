@@ -2,16 +2,32 @@
 
 import logging
 
-from django.core.cache import caches
-from django.utils.functional import wraps
-
+from collections import defaultdict
 from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
+from django.core.cache import caches
+from django.db import models
 
+from django.utils.functional import wraps
 
 logger = logging.getLogger("cache_utils")
 
 
-def cached(timeout, group=None, backend=None, key=None):
+class CacheRegistry(object):
+    def __init__(self):
+        self._models = defaultdict(set)
+
+    def register_key(self, model_list, key):
+        for model in model_list:
+            self._models[model._meta.label_lower].add(key)
+
+    def retrieve_keys(self, model):
+        return self._models[model._meta.label_lower]
+
+
+registry = CacheRegistry()
+
+
+def cached(timeout, group=None, backend=None, key=None, model_list=[]):
     """ Caching decorator. Can be applied to function, method or classmethod.
     Supports bulk cache invalidation and invalidation for exact parameter
     set. Cache keys are human-readable because they are constructed from
@@ -119,9 +135,17 @@ def cached(timeout, group=None, backend=None, key=None):
         wrapper.force_recalc = force_recalc
         wrapper.get_cache_key = get_cache_key
 
+        registry.register_key(model_list, wrapper)
         return wrapper
     return _cached
 
 
 class NoCachedValueException(Exception):
     pass
+
+def force_recalc_model(sender, instance, **kwargs):
+    keys = registry.retrieve_keys(sender)
+    for key in keys:
+        key.force_recalc()
+
+models.signals.post_save.connect(force_recalc_model)
