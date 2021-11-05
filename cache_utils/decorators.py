@@ -105,6 +105,12 @@ def cached(timeout, group=None, backend=None, key=None, model_list=[]):
             cache_backend.set(key, value, timeout, **backend_kwargs)
             return value
 
+        def full_name(*args):
+            # full name is stored as attribute on first call
+            if not hasattr(wrapper, '_full_name'):
+                name, _args = _func_info(func, args)
+                wrapper._full_name = name
+
         def require_cache(*args, **kwargs):
             """
             Only pull from cache, do not attempt to calculate
@@ -129,13 +135,9 @@ def cached(timeout, group=None, backend=None, key=None, model_list=[]):
         wrapper.force_recalc = force_recalc
         wrapper.get_cache_key = get_cache_key
 
-        def full_name(*args):
-            # full name is stored as attribute on first call
-            if not hasattr(wrapper, '_full_name'):
-                name, _args = _func_info(func, args)
-                wrapper._full_name = name
-            registry.register_key(model_list, wrapper)
-
+        registry.register_key(model_list, wrapper)
+        from pprint import pprint
+        pprint(registry)
         return wrapper
     return _cached
 
