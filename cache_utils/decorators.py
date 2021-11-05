@@ -135,8 +135,9 @@ def cached(timeout, group=None, backend=None, key=None, model_list=[]):
         wrapper.force_recalc = force_recalc
         wrapper.get_cache_key = get_cache_key
 
-        registry.register_key(model_list, wrapper)
         return wrapper
+
+    registry.register_key(model_list, _cached)
     return _cached
 
 
