@@ -80,7 +80,7 @@ def cached(timeout, group=None, backend=None, key=None, model_list=[]):
                 logger.debug("Cache SET: %s" % key)
             else:
                 logger.debug("Cache HIT: %s" % key)
-
+            register_cache_key(*args)
             return value
 
         def invalidate(*args, **kwargs):
@@ -130,12 +130,14 @@ def cached(timeout, group=None, backend=None, key=None, model_list=[]):
             key = _get_key(wrapper._full_name, 'function', args, kwargs)
             return key
 
-        wrapper.require_cache = require_cache
-        wrapper.invalidate = invalidate
-        wrapper.force_recalc = force_recalc
-        wrapper.get_cache_key = get_cache_key
+        def register_cache_key(*args, **kwargs):
+            wrapper.require_cache = require_cache
+            wrapper.invalidate = invalidate
+            wrapper.force_recalc = force_recalc
+            wrapper.get_cache_key = get_cache_key
+            registry.register_key(model_list, wrapper)
 
-        registry.register_key(model_list, wrapper)
+        register_cache_key()
         return wrapper
     return _cached
 
