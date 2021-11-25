@@ -2,7 +2,7 @@
 from setuptools import setup, Command
 
 
-version = '3.1.2'
+version = '3.1.3'
 
 
 class TestCommand(Command):

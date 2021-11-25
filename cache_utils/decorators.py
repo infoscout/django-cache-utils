@@ -2,7 +2,6 @@
 
 import logging
 
-from collections import defaultdict
 from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
 from django.core.cache import caches
 from django.db import models
@@ -13,15 +12,21 @@ logger = logging.getLogger("cache_utils")
 
 
 class CacheRegistry(object):
-    def __init__(self):
-        self._models = defaultdict(set)
-
     def register_key(self, model_list, key):
+        cache_backend = caches['default']
+
         for model in model_list:
-            self._models[model._meta.label_lower].add(key)
+            model_key = model._meta.label_lower
+            registered_keys = cache_backend.get(model_key)
+            if not registered_keys:
+                cache_backend.set(model_key, [key])
+            else:
+                registered_keys.append(key)
+                cache_backend.set(model_key, registered_keys)
 
     def retrieve_keys(self, model):
-        return self._models[model._meta.label_lower]
+        cache_backend = caches['default']
+        return cache_backend.get(model._meta.label_lower)
 
 
 registry = CacheRegistry()
@@ -80,7 +85,7 @@ def cached(timeout, group=None, backend=None, key=None, model_list=[]):
                 logger.debug("Cache SET: %s" % key)
             else:
                 logger.debug("Cache HIT: %s" % key)
-
+            registry.register_key(model_list, key)
             return value
 
         def invalidate(*args, **kwargs):
@@ -135,7 +140,6 @@ def cached(timeout, group=None, backend=None, key=None, model_list=[]):
         wrapper.force_recalc = force_recalc
         wrapper.get_cache_key = get_cache_key
 
-        registry.register_key(model_list, wrapper)
         return wrapper
     return _cached
 
@@ -144,8 +148,10 @@ class NoCachedValueException(Exception):
     pass
 
 def invalidate_model(sender, instance, *args, **kwargs):
+    cache_backend = caches['default']
     keys = registry.retrieve_keys(sender)
-    for key in keys:
-        key.invalidate(*args, **kwargs)
+    if keys:
+        for key in keys:
+            cache_backend.delete(key)
 
 models.signals.post_save.connect(invalidate_model)
