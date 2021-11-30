@@ -21,7 +21,8 @@ class CacheRegistry(object):
             if not registered_keys:
                 cache_backend.set(model_key, [key])
             else:
-                registered_keys.append(key)
+                if key not in registered_keys:
+                    registered_keys.append(key)
                 cache_backend.set(model_key, registered_keys)
 
     def retrieve_keys(self, model):
@@ -139,7 +140,6 @@ def cached(timeout, group=None, backend=None, key=None, model_list=[]):
         wrapper.invalidate = invalidate
         wrapper.force_recalc = force_recalc
         wrapper.get_cache_key = get_cache_key
-
         return wrapper
     return _cached
 
