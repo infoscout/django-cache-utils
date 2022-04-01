@@ -1,12 +1,12 @@
 version: 2
 jobs:
-  test-py27: &test-template
+  test-py35: &test-template
     docker:
-      - image: circleci/python:2.7
+      - image: circleci/python:3.5
       - image: memcached
     resource_class: small
     environment:
-      - DJANGO_VERSIONS: "18;19;110;111"
+      - DJANGO_VERSIONS: "18;19;110;111;20;21;22"
     steps:
       - checkout
       - run:
@@ -22,28 +22,48 @@ jobs:
           command: |
             source venv/bin/activate
             echo $DJANGO_VERSIONS | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
-  test-py34:
-    <<: *test-template
-    docker:
-      - image: circleci/python:3.4
-      - image: memcached
-  test-py35:
-    <<: *test-template
-    docker:
-      - image: circleci/python:3.5
-      - image: memcached
   test-py36:
     <<: *test-template
     docker:
       - image: circleci/python:3.6
       - image: memcached
     environment:
-      - DJANGO_VERSIONS: "111"
+      - DJANGO_VERSIONS: "18;19;110;111;20;21;22;30;31;32"
+  test-py37:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.7
+      - image: memcached
+    environment:
+      - DJANGO_VERSIONS: "21;22;30;31;32"
+  test-py38:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.8
+      - image: memcached
+    environment:
+      - DJANGO_VERSIONS: "22;30;31;32;40"
+  test-py39:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.9
+      - image: memcached
+    environment:
+      - DJANGO_VERSIONS: "30;31;32;40"
+  test-py310:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.10
+      - image: memcached
+    environment:
+      - DJANGO_VERSIONS: "32;40"
 workflows:
   version: 2
   test:
     jobs:
-      - test-py27
-      - test-py34
       - test-py35
       - test-py36
+      - test-py37
+      - test-py38
+      - test-py39
+      - test-py310
