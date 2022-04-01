@@ -9,7 +9,10 @@ import time
 import uuid
 
 from django.conf import settings
-from django.core.cache.backends.memcached import MemcachedCache
+try:
+    from django.core.cache.backends.memcached import PyMemcacheCache
+except ImportError:  # Django < 3.2
+    from django.core.cache.backends.memcached import MemcachedCache as PyMemcacheCache
 from django.utils.encoding import smart_str
 
 from cache_utils.utils import sanitize_memcached_key
@@ -24,7 +27,7 @@ _KEY_PREFIX = "_group::"
 MINT_DELAY = 30
 
 
-class CacheClass(MemcachedCache):
+class CacheClass(PyMemcacheCache):
 
     def _get_real_timeout(self, timeout):
         return timeout or self.default_timeout
