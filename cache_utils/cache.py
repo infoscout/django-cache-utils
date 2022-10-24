@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from django.core.cache import get_cache
+from django.core.cache import caches
 
 
 logger = logging.getLogger("cache_utils")
@@ -15,11 +15,10 @@ def _generate_key(key):
     return key
 
 
-def get(key, backend=None):
+def get(key, backend='default'):
     """ Wrapper to get from cache.
     """
-    backend = backend or 'default'
-    cache = get_cache(backend)
+    cache = caches[backend]
     key = _generate_key(key)
     val = cache.get(key)
 
@@ -31,11 +30,10 @@ def get(key, backend=None):
     return val
 
 
-def set(key, value, backend=None):
+def set(key, value, backend='default'):
     """ Wrapper to set key/value cache
     """
-    backend = backend or 'default'
-    cache = get_cache(backend)
+    cache = caches[backend]
     key = _generate_key(key)
 
     val = cache.set(key, value)
@@ -44,11 +42,10 @@ def set(key, value, backend=None):
     return val
 
 
-def delete(key, backend=None):
+def delete(key, backend='default'):
     """ Wrapper to delete key/value cache
     """
-    backend = backend or 'default'
-    cache = get_cache(backend)
+    cache = caches[backend]
     key = _generate_key(key)
 
     val = cache.delete(key)
