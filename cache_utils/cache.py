@@ -8,16 +8,14 @@ logger = logging.getLogger("cache_utils")
 
 
 def _generate_key(key):
-    """ Serializes a tuple into a key for caching
-    """
+    # Serializes a tuple into a key for caching
     if isinstance(key, (list, tuple)):
         return "-".join(key)
     return key
 
 
 def get(key, backend='default'):
-    """ Wrapper to get from cache.
-    """
+    # Wrapper to get from cache.
     cache = caches[backend]
     key = _generate_key(key)
     val = cache.get(key)
@@ -31,8 +29,7 @@ def get(key, backend='default'):
 
 
 def set(key, value, backend='default'):
-    """ Wrapper to set key/value cache
-    """
+    # Wrapper to set key/value cache
     cache = caches[backend]
     key = _generate_key(key)
 
@@ -43,8 +40,7 @@ def set(key, value, backend='default'):
 
 
 def delete(key, backend='default'):
-    """ Wrapper to delete key/value cache
-    """
+    # Wrapper to delete key/value cache
     cache = caches[backend]
     key = _generate_key(key)
 
