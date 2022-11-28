@@ -1,6 +1,6 @@
 from hashlib import md5
 
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 import six
 
 
@@ -27,9 +27,9 @@ def sanitize_memcached_key(key, max_length=250):
 def _args_to_unicode(args, kwargs):
     key = ""
     if args:
-        key += smart_text(args)
+        key += smart_str(args)
     if kwargs:
-        key += smart_text(kwargs)
+        key += smart_str(kwargs)
     return key
 
 
