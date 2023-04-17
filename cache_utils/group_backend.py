@@ -9,13 +9,14 @@ import time
 import uuid
 
 from django.conf import settings
+
+from cache_utils.utils import sanitize_memcached_key
+
 try:
     from django.core.cache.backends.memcached import PyMemcacheCache
 except ImportError:  # Django < 3.2
     from django.core.cache.backends.memcached import MemcachedCache as PyMemcacheCache
 from django.utils.encoding import smart_str
-
-from cache_utils.utils import sanitize_memcached_key
 
 
 # This prefix is appended to the group name to prevent cache key clashes.
@@ -77,7 +78,7 @@ class CacheClass(PyMemcacheCache):
             _VERSION_PREFIX prepended and is shorter than memcached key length
             limit.
         """
-        key = _VERSION_PREFIX + key
+        key = _VERSION_PREFIX + str(key)
         if group:
             if not hashkey:
                 hashkey = self._get_hashkey(group)

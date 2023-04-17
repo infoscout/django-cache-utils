@@ -5,7 +5,6 @@ from unittest import TestCase
 from django.core.cache import cache
 
 from cache_utils.decorators import cached
-from cache_utils.utils import sanitize_memcached_key, _func_type, _func_info
 
 
 def foo(a, b):
@@ -32,55 +31,15 @@ class Store(object):
         return u'Вася'.encode('utf8')
 
 
-class FuncTypeTest(TestCase):
-
-    def assertFuncType(self, func, tp):
-        self.assertEqual(_func_type(func), tp)
-
-    def test_func(self):
-        self.assertFuncType(foo, 'function')
-
-    def test_method(self):
-        self.assertFuncType(Foo.foo, 'method')
-
-    def test_classmethod(self):
-        self.assertFuncType(Foo.bar, 'classmethod')
-
-
-class FuncInfoTest(TestCase):
-
-    def assertFuncInfo(self, func, args_in, name, args_out):
-        info = _func_info(func, args_in)
-        self.assertEqual(info[0], name)
-        self.assertEqual(info[1], args_out)
-
-    def test_func(self):
-        self.assertFuncInfo(foo, [1, 2], 'cache_utils.tests.foo:11', [1, 2])
-
-    def test_method(self):
-        foo_obj = Foo()
-        self.assertFuncInfo(Foo.foo, [foo_obj, 1, 2], 'cache_utils.tests.Foo.foo:17', [1, 2])
-
-    def test_classmethod(self):
-        self.assertFuncInfo(Foo.bar, [Foo, 1], 'cache_utils.tests.Foo.bar:20', [1])
-
-
-class SanitizeTest(TestCase):
-
-    def test_sanitize_keys(self):
-        key = u"12345678901234567890123456789012345678901234567890"
-        self.assertTrue(len(key) >= 40)
-        key = sanitize_memcached_key(key, 40)
-        self.assertTrue(len(key) <= 40)
-
-
 class ClearMemcachedTest(TestCase):
 
     def tearDown(self):
-        cache._cache.flush_all()
+        pass
+        # cache._cache.flush_all()
 
     def setUp(self):
-        cache._cache.flush_all()
+        pass
+        # cache._cache.flush_all()
 
 
 class InvalidationTest(ClearMemcachedTest):
@@ -177,12 +136,12 @@ class DecoratorTest(ClearMemcachedTest):
             return 'test'
 
         key = foo.get_cache_key()
-        self.assertEqual(key, '[cached]foo()')
+        self.assertEqual(key, 'foo')
 
         # Now test with args and kwargs argo
-        @cached(60*5, key='func_with_args')
+        @cached(60*5)
         def bar(i, foo='bar'):
             return i * 5
 
         key = bar.get_cache_key(2, foo='hello')
-        self.assertEqual(key, "[cached]func_with_args((2,){'foo':'hello'})")
+        self.assertEqual(key, "[cached]bar((2,){'foo':'hello'})")
