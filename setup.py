@@ -2,7 +2,7 @@
 from setuptools import setup, Command
 
 
-version = '3.1.4'
+version = '4.0.0'
 
 
 class TestCommand(Command):
@@ -49,8 +49,8 @@ setup(
         "Caching decorator and django cache backend with advanced invalidation ability and dog-pile effect prevention"
     ),
     long_description=open('README.md').read(),
-    install_requires=['Django >= 1.8', 'python_memcached', 'pymemcache'],
-    classifiers=(
+    install_requires=['Django >= 3.0', 'python_memcached', 'pymemcache'],
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -66,6 +66,6 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules',
-    ),
+    ],
     cmdclass={'test': TestCommand},
 )
