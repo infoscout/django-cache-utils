@@ -73,17 +73,19 @@ def stringify_args(args, kwargs, object_attrs: None) -> Tuple[list, dict]:
         if isinstance(obj, (list, tuple)):
             return [stringify(e) for e in obj]
         elif isinstance(obj, dict):
-            return {k: stringify(v) for k, v in obj.items()}
+            return {k: stringify(v) for k, v in sorted(obj.items())} # sort to ensure consistent order
         elif hasattr(obj, '__dict__'):
             obj_str = obj.__class__.__name__
             attrs = {attr: str(getattr(obj, attr, None)) for attr in object_attrs.get(obj.__class__, [])}
-            return obj_str + str(attrs)
+            sorted_attrs = sorted(attrs.items()) # sort to ensure consistent order
+            return obj_str + str(dict(sorted_attrs))
         else:
             return str(obj)
 
     stringified_args = [stringify(a) for a in args]
     stringified_kwargs = {k: stringify(v) for k, v in kwargs.items()}
     return stringified_args, stringified_kwargs
+
 
 
 def _cache_key(func_name, func_type, args, kwargs):
