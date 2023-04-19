@@ -59,16 +59,16 @@ class FuncInfoTest(TestCase):
 
     def test_func(self):
         line_number = inspect.getsourcelines(foo)[1]
-        self.assertFuncInfo(foo, [1, 2], f'cache_utils.tests.foo:{line_number}', [1, 2])
+        self.assertFuncInfo(foo, [1, 2], 'cache_utils.tests.foo:{}'.format(line_number), [1, 2])
 
     def test_method(self):
         foo_obj = Foo()
         line_number = inspect.getsourcelines(Foo.foo)[1]
-        self.assertFuncInfo(Foo.foo, [foo_obj, 1, 2], f'cache_utils.tests.Foo.foo:{line_number}', [1, 2])
+        self.assertFuncInfo(Foo.foo, [foo_obj, 1, 2], 'cache_utils.tests.Foo.foo:{}'.format(line_number), [1, 2])
 
     def test_classmethod(self):
         line_number = inspect.getsourcelines(Foo.bar)[1]
-        self.assertFuncInfo(Foo.bar, [Foo, 1], f'cache_utils.tests.Foo.bar:{line_number}', [1])
+        self.assertFuncInfo(Foo.bar, [Foo, 1], 'cache_utils.tests.Foo.bar:{}'.format(line_number), [1])
 
 
 class SanitizeTest(TestCase):
