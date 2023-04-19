@@ -1,4 +1,5 @@
 from hashlib import md5
+from typing import Tuple
 
 from django.utils.encoding import smart_str
 import six
@@ -64,6 +65,27 @@ def _func_info(func, args):
     return name, args[1:]
 
 
+def stringify_args(args, kwargs, object_attrs: None) -> Tuple[list, dict]:
+    if object_attrs is None:
+        object_attrs = {}
+
+    def stringify(obj):
+        if isinstance(obj, (list, tuple)):
+            return [stringify(e) for e in obj]
+        elif isinstance(obj, dict):
+            return {k: stringify(v) for k, v in obj.items()}
+        elif hasattr(obj, '__dict__'):
+            obj_str = obj.__class__.__name__
+            attrs = {attr: str(getattr(obj, attr, None)) for attr in object_attrs.get(obj.__class__, [])}
+            return obj_str + str(attrs)
+        else:
+            return str(obj)
+
+    stringified_args = [stringify(a) for a in args]
+    stringified_kwargs = {k: stringify(v) for k, v in kwargs.items()}
+    return stringified_args, stringified_kwargs
+
+
 def _cache_key(func_name, func_type, args, kwargs):
     """ Construct readable cache key """
     if func_type == 'function':
@@ -71,4 +93,4 @@ def _cache_key(func_name, func_type, args, kwargs):
     else:
         args_string = _args_to_unicode(args[1:], kwargs)
 
-    return '[cached]%s(%s)' % (func_name, args_string,)
+    return '[cached]%s(%s)%s:%s' % (func_name, args_string,)
