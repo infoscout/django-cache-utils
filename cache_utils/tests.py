@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.http import HttpRequest
+# from django.http import HttpRequest
 from unittest import TestCase
 
 from django.core.cache import cache
