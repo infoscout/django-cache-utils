@@ -188,6 +188,7 @@ class DecoratorTest(ClearMemcachedTest):
         key = bar.get_cache_key(2, foo='hello')
         self.assertEqual(key, "[cached]func_with_args((2,){'foo':'hello'})")
 
+
 class UtilsTest(TestCase):
 
     def test_stringify_args(self):
