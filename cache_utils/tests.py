@@ -2,13 +2,13 @@
 
 import inspect
 
-# from django.http import HttpRequest
+from django.http import HttpRequest
 from unittest import TestCase
 
 from django.core.cache import cache
 
 from cache_utils.decorators import cached
-from cache_utils.utils import sanitize_memcached_key, _func_type, _func_info
+from cache_utils.utils import sanitize_memcached_key, _func_type, _func_info, stringify_args
 
 
 def foo(a, b):
@@ -194,28 +194,28 @@ class DecoratorTest(ClearMemcachedTest):
         self.assertEqual(key, "[cached]func_with_args((2,){'foo':'hello'})")
 
 
-# class UtilsTest(TestCase):
+class UtilsTest(TestCase):
 
-#     def test_stringify_args(self):
-#         # Define the object attributes for the HttpRequest class
-#         object_attrs = {HttpRequest: ['method', 'path']}
+    def test_stringify_args(self):
+        # Define the object attributes for the HttpRequest class
+        object_attrs = {HttpRequest: ['method', 'path']}
 
-#         # Create an HttpRequest instance
-#         request = HttpRequest()
-#         request.method = 'GET'
-#         request.path = '/numerator/'
+        # Create an HttpRequest instance
+        request = HttpRequest()
+        request.method = 'GET'
+        request.path = '/numerator/'
 
-#         # Define input args and kwargs
-#         args = (request, 25)
-#         kwargs = {'address': '123 Ritch St'}
+        # Define input args and kwargs
+        args = (request, 25)
+        kwargs = {'address': '123 Ritch St'}
 
-#         # Call stringify_args with the inputs
-#         stringified_args, stringified_kwargs = stringify_args(args, kwargs, object_attrs)
+        # Call stringify_args with the inputs
+        stringified_args, stringified_kwargs = stringify_args(args, kwargs, object_attrs)
 
-#         # Expected output
-#         expected_stringified_args = ["HttpRequest{'method': 'GET', 'path': '/numerator/'}", '25']
-#         expected_stringified_kwargs = {'address': '123 Ritch St'}
+        # Expected output
+        expected_stringified_args = ["HttpRequest{'method': 'GET', 'path': '/numerator/'}", '25']
+        expected_stringified_kwargs = {'address': '123 Ritch St'}
 
-#         # Check if the output matches the expected values
-#         self.assertEqual(stringified_args, expected_stringified_args)
-#         self.assertEqual(stringified_kwargs, expected_stringified_kwargs)
+        # Check if the output matches the expected values
+        self.assertEqual(stringified_args, expected_stringified_args)
+        self.assertEqual(stringified_kwargs, expected_stringified_kwargs)
