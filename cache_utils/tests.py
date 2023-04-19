@@ -213,7 +213,7 @@ class UtilsTest(TestCase):
         stringified_args, stringified_kwargs = stringify_args(args, kwargs, object_attrs)
 
         # Expected output
-        expected_stringified_args = ["HttpRequest{'method': 'GET', 'path': '/numerator/'}", '25']
+        expected_stringified_args = ["HttpRequest{'path': '/numerator/', 'method': 'GET'}", '25']
         expected_stringified_kwargs = {'address': '123 Ritch St'}
 
         # Check if the output matches the expected values
