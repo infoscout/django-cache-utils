@@ -93,4 +93,4 @@ def _cache_key(func_name, func_type, args, kwargs):
     else:
         args_string = _args_to_unicode(args[1:], kwargs)
 
-    return '[cached]%s(%s)%s:%s' % (func_name, args_string,)
+    return '[cached]%s(%s)' % (func_name, args_string,)
