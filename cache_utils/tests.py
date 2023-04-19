@@ -8,7 +8,7 @@ from unittest import TestCase
 from django.core.cache import cache
 
 from cache_utils.decorators import cached
-from cache_utils.utils import sanitize_memcached_key, _func_type, _func_info, stringify_args
+from cache_utils.utils import _cache_key, sanitize_memcached_key, _func_type, _func_info, stringify_args
 
 
 def foo(a, b):
@@ -196,6 +196,9 @@ class DecoratorTest(ClearMemcachedTest):
 
 class UtilsTest(TestCase):
 
+    def example_function(self, request, number):
+        return "{} - {}".format(request.path, number)
+
     def test_stringify_args(self):
         # Define the object attributes for the HttpRequest class
         object_attrs = {HttpRequest: ['method', 'path']}
@@ -219,3 +222,17 @@ class UtilsTest(TestCase):
         # Check if the output matches the expected values
         self.assertEqual(stringified_args, expected_stringified_args)
         self.assertEqual(stringified_kwargs, expected_stringified_kwargs)
+    
+    def test_cache_key_with_http_request(self):
+        request = HttpRequest()
+        request.path = "/test_path/"
+        request.method = "GET"
+        
+        func_name, func_args = _func_info(self.example_function, (self, request, 42))
+        cache_key = _cache_key(func_name, "method", func_args, {}, object_attrs={HttpRequest: ["path", "method"]})
+        
+        expected_key_start = "[cached]cache_key_test.CacheKeyTest.example_function:"
+        expected_key_args = "HttpRequest{'method': 'GET', 'path': '/test_path/'}, 42"
+        
+        self.assertTrue(cache_key.startswith(expected_key_start))
+        self.assertTrue(expected_key_args in cache_key)

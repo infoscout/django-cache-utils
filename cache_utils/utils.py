@@ -90,11 +90,12 @@ def stringify_args(args, kwargs, object_attrs: None) -> Tuple[list, dict]:
 
 
 
-def _cache_key(func_name, func_type, args, kwargs):
+def _cache_key(func_name, func_type, args, kwargs, object_attrs=None):
     """ Construct readable cache key """
+    stringified_args, stringified_kwargs = stringify_args(args, kwargs, object_attrs)
     if func_type == 'function':
-        args_string = _args_to_unicode(args, kwargs)
+        args_string = _args_to_unicode(stringified_args, stringified_kwargs)
     else:
-        args_string = _args_to_unicode(args[1:], kwargs)
+        args_string = _args_to_unicode(stringified_args[1:], stringified_kwargs)
 
     return '[cached]%s(%s)' % (func_name, args_string,)
