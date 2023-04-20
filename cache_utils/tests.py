@@ -25,6 +25,12 @@ class Foo(object):
         pass
 
 
+class MyObject:
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+
 class Store(object):
     """ Class for encoding error test """
 
@@ -192,6 +198,47 @@ class DecoratorTest(ClearMemcachedTest):
 
         key = bar.get_cache_key(2, foo='hello')
         self.assertEqual(key, "[cached]func_with_args((2,){'foo':'hello'})")
+
+    def test_object_attrs(self):
+        self._x = 0
+        @cached(60, object_attrs={MyObject: ['a']})
+        def my_func(obj):
+            self._x += 1
+            return self._x
+
+        obj1 = MyObject(1, 2)
+        obj2 = MyObject(1, 3)
+        obj3 = MyObject(2, 2)
+
+        # Both obj1 and obj2 have the same 'a' attribute, so the cache should be hit.
+        self.assertEqual(my_func(obj1), 1)
+        self.assertEqual(my_func(obj2), 1)
+
+        # obj3 has a different 'a' attribute, so it should miss the cache and recalculate.
+        self.assertEqual(my_func(obj3), 2)
+
+    def test_hashed_cache_key(self):
+        self._x = 0
+        @cached(60, hashed=True)
+        def my_func(long_param):
+            self._x += 1
+            return self._x
+
+        long_param1 = "x" * 500
+        long_param2 = "y" * 500
+
+        # First time called, it should calculate the value and cache it.
+        self.assertEqual(my_func(long_param1), 1)
+
+        # The cache should be hit since the same long_param is used.
+        self.assertEqual(my_func(long_param1), 1)
+
+        # The cache should be missed since a different long_param is used.
+        self.assertEqual(my_func(long_param2), 2)
+
+        # The cache should be hit for both long_param values.
+        self.assertEqual(my_func(long_param1), 1)
+        self.assertEqual(my_func(long_param2), 2)
 
 
 class UtilsTest(TestCase):
