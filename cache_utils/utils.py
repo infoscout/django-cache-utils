@@ -81,9 +81,10 @@ def stringify_args(args, kwargs, object_attrs: None) -> Tuple[tuple, dict]:
             attrs = {attr: str(getattr(obj, attr, None)) for attr in object_attrs.get(obj.__class__, [])}
             sorted_attrs = OrderedDict(sorted(attrs.items()))  # sort to ensure consistent ordering for < py 3.6
             return obj_str + "{" + ", ".join("{!r}: {!r}".format(k, v) for k, v in sorted_attrs.items()) + "}"
+        elif isinstance(obj, (float, int, bool)):
+            return obj
         else:
             return str(obj)
-
 
     stringified_args = tuple([stringify(a) for a in args])
     stringified_kwargs = {k: stringify(v) for k, v in kwargs.items()}

@@ -216,7 +216,7 @@ class UtilsTest(TestCase):
         stringified_args, stringified_kwargs = stringify_args(args, kwargs, object_attrs)
 
         # Expected output
-        expected_stringified_args = ("HttpRequest{'method': 'GET', 'path': '/numerator/'}", '25',)
+        expected_stringified_args = ("HttpRequest{'method': 'GET', 'path': '/numerator/'}", 25,)
         expected_stringified_kwargs = {'address': '123 Ritch St'}
 
         # Check if the output matches the expected values
@@ -233,6 +233,6 @@ class UtilsTest(TestCase):
 
         func_name, func_type, args, kwargs = "my_function", "function", (request, 1, 2), {}
         object_attrs = {HttpRequest: ['method', 'path']}
-        expected_key = '[cached]my_function(("HttpRequest{\'method\': \'GET\', \'path\': \'/numerator/\'}", \'1\', \'2\'))'
+        expected_key = '[cached]my_function(("HttpRequest{\'method\': \'GET\', \'path\': \'/numerator/\'}", 1, 2))'
         actual_key = _cache_key(func_name, func_type, args, kwargs, object_attrs)
         self.assertEqual(expected_key, actual_key)
