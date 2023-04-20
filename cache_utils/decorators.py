@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from hashlib import md5
 
 from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
 from django.core.cache import caches
 from django.db import models
+from django.utils.encoding import smart_str
 
 from django.utils.functional import wraps
 
@@ -33,7 +35,7 @@ class CacheRegistry(object):
 registry = CacheRegistry()
 
 
-def cached(timeout, group=None, backend='default', key=None, model_list=[]):
+def cached(timeout, group=None, backend='default', key=None, model_list=[], hashed=False):
     """ Caching decorator. Can be applied to function, method or classmethod.
     Supports bulk cache invalidation and invalidation for exact parameter
     set. Cache keys are human-readable because they are constructed from
@@ -53,9 +55,14 @@ def cached(timeout, group=None, backend='default', key=None, model_list=[]):
             args[0] = key
             return sanitize_memcached_key(_cache_key(*args, **kwargs))
         _get_key = test
-
     else:
-        _get_key = lambda *args, **kwargs: sanitize_memcached_key(_cache_key(*args, **kwargs))
+        if hashed:
+            def _get_hashed_key(*args, **kwargs):
+                key = _cache_key(*args, **kwargs)
+                return md5(smart_str(key).encode()).hexdigest()
+            _get_key = _get_hashed_key
+        else:
+            _get_key = lambda *args, **kwargs: sanitize_memcached_key(_cache_key(*args, **kwargs))
 
     if group:
         backend_kwargs = {'group': group}
