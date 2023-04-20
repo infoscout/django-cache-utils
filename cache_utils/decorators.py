@@ -35,7 +35,7 @@ class CacheRegistry(object):
 registry = CacheRegistry()
 
 
-def cached(timeout, group=None, backend='default', key=None, model_list=[], hashed=False):
+def cached(timeout, group=None, backend='default', key=None, model_list=[], hashed=False, object_attrs=None):
     """ Caching decorator. Can be applied to function, method or classmethod.
     Supports bulk cache invalidation and invalidation for exact parameter
     set. Cache keys are human-readable because they are constructed from
@@ -79,7 +79,7 @@ def cached(timeout, group=None, backend='default', key=None, model_list=[], hash
             full_name(*args)
 
             # try to get the value from cache
-            key = _get_key(wrapper._full_name, func_type, args, kwargs)
+            key = _get_key(wrapper._full_name, func_type, args, kwargs, object_attrs)
             value = cache_backend.get(key, **backend_kwargs)
 
             # in case of cache miss recalculate the value and put it to the cache
