@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from hashlib import md5
+from hashlib import sha256
 
 from cache_utils.utils import _cache_key, _func_info, _func_type, sanitize_memcached_key
 from django.core.cache import caches
@@ -59,7 +59,7 @@ def cached(timeout, group=None, backend='default', key=None, model_list=[], hash
         if hashed:
             def _get_hashed_key(*args, **kwargs):
                 key = _cache_key(*args, **kwargs)
-                return md5(smart_str(key).encode()).hexdigest()
+                return sha256(smart_str(key).encode()).hexdigest()
             _get_key = _get_hashed_key
         else:
             _get_key = lambda *args, **kwargs: sanitize_memcached_key(_cache_key(*args, **kwargs))
