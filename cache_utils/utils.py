@@ -74,12 +74,12 @@ def stringify_args(args, kwargs, object_attrs: None) -> Tuple[list, dict]:
         if isinstance(obj, (list, tuple)):
             return [stringify(e) for e in obj]
         elif isinstance(obj, dict):
-            sorted_items = sorted(obj.items()) # sort to ensure consistent ordering for < py3.6
+            sorted_items = sorted(obj.items()) # sort to ensure consistent ordering for < py 3.6
             return "{" + ", ".join("{!r}: {}".format(k, stringify(v)) for k, v in sorted_items) + "}"
         elif hasattr(obj, '__dict__'):
             obj_str = obj.__class__.__name__
             attrs = {attr: str(getattr(obj, attr, None)) for attr in object_attrs.get(obj.__class__, [])}
-            sorted_attrs = OrderedDict(sorted(attrs.items())) # sort to ensure consistent ordering for < py3.6
+            sorted_attrs = OrderedDict(sorted(attrs.items())) # sort to ensure consistent ordering for < py 3.6
             return obj_str + "{" + ", ".join("{!r}: {!r}".format(k, v) for k, v in sorted_attrs.items()) + "}"
         else:
             return str(obj)

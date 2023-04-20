@@ -222,17 +222,17 @@ class UtilsTest(TestCase):
         # Check if the output matches the expected values
         self.assertEqual(stringified_args, expected_stringified_args)
         self.assertEqual(stringified_kwargs, expected_stringified_kwargs)
-    
-    def test_cache_key_with_http_request(self):
+
+    def test_function_with_http_request(self):
+        def my_function(request, a, b):
+            return a + b
+
         request = HttpRequest()
-        request.path = "/test_path/"
-        request.method = "GET"
-        
-        func_name, func_args = _func_info(self.example_function, (self, request, 42))
-        cache_key = _cache_key(func_name, "method", func_args, {}, object_attrs={HttpRequest: ["path", "method"]})
-        
-        expected_key_start = "[cached]cache_key_test.CacheKeyTest.example_function:"
-        expected_key_args = "HttpRequest{'method': 'GET', 'path': '/test_path/'}, 42"
-        
-        self.assertTrue(cache_key.startswith(expected_key_start))
-        self.assertTrue(expected_key_args in cache_key)
+        request.method = 'GET'
+        request.path = '/numerator/'
+
+        func_name, func_type, args, kwargs = "my_function", "function", (request, 1, 2), {}
+        object_attrs = {HttpRequest: ['method', 'path']}
+        expected_key = '[cached]my_function(["HttpRequest{\'method\': \'GET\', \'path\': \'/numerator/\'}", \'1\', \'2\'])'
+        actual_key = _cache_key(func_name, func_type, args, kwargs, object_attrs)
+        self.assertEqual(expected_key, actual_key)
