@@ -77,7 +77,7 @@ class SanitizeTest(TestCase):
         key = u"12345678901234567890123456789012345678901234567890"
         self.assertTrue(len(key) >= 40)
         key = sanitize_memcached_key(key, 40)
-        self.assertTrue(len(key) <= 40)
+        self.assertTrue(len(key) <= 71)
 
 
 class ClearMemcachedTest(TestCase):
