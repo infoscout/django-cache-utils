@@ -66,7 +66,7 @@ def _func_info(func, args):
     return name, args[1:]
 
 
-def stringify_args(args, kwargs, object_attrs: None) -> Tuple[tuple, dict]:
+def stringify_args(args, kwargs, object_attrs: dict) -> Tuple[tuple, dict]:
     """
     Convert arguments and keyword arguments to their string representations, handling various types of objects.
     If an object has attributes specified in the `object_attrs` dictionary, the output string includes
@@ -81,8 +81,6 @@ def stringify_args(args, kwargs, object_attrs: None) -> Tuple[tuple, dict]:
     Returns:
         Tuple[tuple, dict]: A tuple containing the stringified positional arguments and keyword arguments.
     """
-    if object_attrs is None:
-        object_attrs = {}
 
     def stringify(obj):
         if isinstance(obj, (list, tuple)):
@@ -106,7 +104,7 @@ def stringify_args(args, kwargs, object_attrs: None) -> Tuple[tuple, dict]:
 
 
 
-def _cache_key(func_name, func_type, args, kwargs, object_attrs=None):
+def _cache_key(func_name, func_type, args, kwargs, object_attrs=None) -> str:
     """
     Construct a readable cache key based on the function's name, type, arguments, and keyword arguments.
     Object attributes can be included in the key if specified in the `object_attrs` dictionary.
@@ -122,10 +120,13 @@ def _cache_key(func_name, func_type, args, kwargs, object_attrs=None):
     Returns:
         str: The constructed cache key.
     """
-    stringified_args, stringified_kwargs = stringify_args(args, kwargs, object_attrs)
-    if func_type == 'function':
-        args_string = _args_to_unicode(stringified_args, stringified_kwargs)
+    if object_attrs is None:
+        obj_args, obj_kwargs = args, kwargs
     else:
-        args_string = _args_to_unicode(stringified_args[1:], stringified_kwargs)
+        obj_args, obj_kwargs = stringify_args(args, kwargs, object_attrs)
+    if func_type == 'function':
+        args_string = _args_to_unicode(obj_args, obj_kwargs)
+    else:
+        args_string = _args_to_unicode(obj_args[1:], obj_kwargs)
 
     return '[cached]%s(%s)' % (func_name, args_string,)
