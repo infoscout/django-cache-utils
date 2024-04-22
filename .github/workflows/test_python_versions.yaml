@@ -6,6 +6,9 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  CODECOV_TOKEN: {{ secrets.CODECOV_TOKEN }}
+
 # Jobs
 jobs:
   test-py37:
