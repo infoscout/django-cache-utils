@@ -8,15 +8,15 @@ concurrency:
 
 # Jobs
 jobs:
-  test-py35:
-    runs-on: ubuntu-20.0.4
+  test-py37:
+    runs-on: ubuntu-latest
     env:
-      DJANGO_VERSIONS: "18;19;110;111;20;21;22"
+      DJANGO_VERSIONS: "21;22;30;31;32"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.5.10'
+          python-version: '3.7.17'
       - uses: niden/actions-memcached@v7
       - name: Install tox
         run: pip install tox
