@@ -1,0 +1,89 @@
+name: Test With Various Python/Django Versions
+on: [push]
+
+# Cancel running workflows for this same branch on each push
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+# Jobs
+jobs:
+  test-py37:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_VERSIONS: "21;22;30;31;32"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.7.17'
+      - uses: niden/actions-memcached@v7
+      - name: Install tox
+        run: pip install tox
+      - name: Run tests with tox
+        run: echo $DJANGO_VERSIONS | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@v2.2.3
+        with:
+          github-token: ${{ github.token }}
+          path-to-lcov: ./coverage.xml
+
+  test-py38:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_VERSIONS: "22;30;31;32;40"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.8.18'
+      - uses: niden/actions-memcached@v7
+      - name: Install tox
+        run: pip install tox
+      - name: Run tests with tox
+        run: echo $DJANGO_VERSIONS | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@v2.2.3
+        with:
+          github-token: ${{ github.token }}
+          path-to-lcov: ./coverage.xml
+
+  test-py39:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_VERSIONS: "30;31;32;40"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.9.19'
+      - uses: niden/actions-memcached@v7
+      - name: Install tox
+        run: pip install tox
+      - name: Run tests with tox
+        run: echo $DJANGO_VERSIONS | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@v2.2.3
+        with:
+          github-token: ${{ github.token }}
+          path-to-lcov: ./coverage.xml
+
+  test-py310:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_VERSIONS: "32;40"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.14'
+      - uses: niden/actions-memcached@v7
+      - name: Install tox
+        run: pip install tox
+      - name: Run tests with tox
+        run: echo $DJANGO_VERSIONS | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@v2.2.3
+        with:
+          github-token: ${{ github.token }}
+          path-to-lcov: ./coverage.xml
