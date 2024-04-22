@@ -1,0 +1,23 @@
+name: Test With Various Python/Django Versions
+on: [push]
+
+# Cancel running workflows for this same branch on each push
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-py35:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_VERSIONS: "18;19;110;111;20;21;22"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.5'
+      - uses: niden/actions-memcached@v7
+      - name: Install tox
+        run: pip install tox
+      - name: Run tests with tox
+        run: echo $DJANGO_VERSIONS | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
