@@ -6,9 +6,6 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
 # Jobs
 jobs:
   test-py37:
@@ -25,3 +22,8 @@ jobs:
         run: pip install tox
       - name: Run tests with tox
         run: echo $DJANGO_VERSIONS | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@v2.2.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage.xml
