@@ -7,7 +7,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CODECOV_TOKEN: {{ secrets.CODECOV_TOKEN }}
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 # Jobs
 jobs:
